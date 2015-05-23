@@ -1,18 +1,18 @@
 package com.example.sample;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.drawable.AnimationDrawable;
-import android.view.View;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
     private AnimationDrawable frameAnimation;
-    private ImageView frameImageView,imageView;
+    private ImageView frameImageView,imageView,balloonImageView1,balloonImageView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,21 +20,30 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         initialiseViews();
         setWorld();
-        setAnimation();
+        setBeeAnimation();
     }
 
     private void initialiseViews() {
         imageView = (ImageView)findViewById(R.id.imageView);
+        balloonImageView1 = (ImageView) findViewById(R.id.ballonImageView1);
+        balloonImageView2 = (ImageView) findViewById(R.id.ballonImageView2);
+        frameImageView = (ImageView) findViewById(R.id.imageAnimation);
+        frameAnimation = (AnimationDrawable) frameImageView.getBackground();
     }
 
     private void setWorld() {
-        frameImageView = (ImageView) findViewById(R.id.imageAnimation);
-        frameImageView.setBackgroundResource(R.drawable.frame_animation_list);
-        frameAnimation = (AnimationDrawable) frameImageView.getBackground();
-
+        setBalloonAnimation(balloonImageView1,"y",600.0f,-100.0f,10000);
+        setBalloonAnimation(balloonImageView2,"y",600.0f,-100.0f,8000);
     }
 
-    private void setAnimation() {
+    private void setBalloonAnimation(ImageView imageView,String property,float start,float end,long duration) {
+        ObjectAnimator transAnimation= ObjectAnimator.ofFloat(imageView, property, start, end);
+        transAnimation.setDuration(duration);//set duration
+        transAnimation.setRepeatCount(ValueAnimator.INFINITE);
+        transAnimation.start();
+    }
+
+    private void setBeeAnimation() {
         final Path mPath = new Path();
         mPath.moveTo(0, 0);
         mPath.quadTo(50, -50, 100, 225);
@@ -59,10 +68,10 @@ public class MainActivity extends Activity {
                 imageView.invalidate();
             }
         });
-
-        pathAnimator.setRepeatMode(ValueAnimator.INFINITE);
-        pathAnimator.setDuration(3000);
-        pathAnimator.start();
+//        bee animation code
+//        pathAnimator.setRepeatMode(ValueAnimator.INFINITE);
+//        pathAnimator.setDuration(3000);
+//        pathAnimator.start();
     }
 
     @Override
